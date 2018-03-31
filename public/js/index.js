@@ -4,11 +4,19 @@ socket.on('connect', function () {
   console.log('Connected to server');
 });
 
-socket.on('newMessage', function(message) {
-  const li = jQuery('<li></li>');
-  const formattedTime = moment(message.createdAt).format('h:mm a');
-  li.text(`${message.from} ${formattedTime}: ${message.text}`);
-  jQuery('#messages').append(li);
+socket.on('newMessage', function({ from, text, createdAt }) {
+  const template = jQuery('#message-template').html();
+  const formattedTime = moment(createdAt).format('h:mm a');
+  const html = Mustache.render(template, {
+    from, formattedTime, text
+  });
+
+  jQuery('#messages').append(html);
+
+  // const li = jQuery('<li></li>');
+  // li.text(`${message.from} ${formattedTime}: ${message.text}`);
+  // jQuery('#messages').append(li);
+
 });
 
 socket.on('newLocationMessage', function(message) {
