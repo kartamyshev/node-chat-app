@@ -30,19 +30,24 @@ io.on('connection', (socket) => {
     users.addUser(socket.id, params.name, params.room);
     io.to(params.room).emit('updateUserList', users.getUserList(params.room));
 
-    socket.emit('newMessage', generateMessage('admin', 'Welcome to the chat app!'))
-    socket.broadcast.to(params.room).emit('newMessage', generateMessage('admin', `${params.name} has joined!`))
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'))
+    socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined!`))
     callback();
   });
 
   socket.on('createMessage', (message, callback) => {
-    console.log('createMessage ->', message);
-    io.emit('newMessage', generateMessage(message.from, message.text));
+    const user = users.getUser(socket.id);
+    if (user && isRealString(message.text)) {
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+    }
     callback();
   });
 
   socket.on('createLocationMessage', ({ latitude, longitude }) => {
-    io.emit('newLocationMessage', generateLocationMessage('Admin', latitude, longitude));
+    const user = users.getUser(socket.id);
+    if (user) {
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, latitude, longitude));
+    }
   });
 
   socket.on('disconnect', () => {
