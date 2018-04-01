@@ -34,12 +34,12 @@ describe('Users', () => {
   });
 
   it('should return names for node course', () => {
-    const usersList = users.getUserLlist('Node Course');
+    const usersList = users.getUserList('Node Course');
     expect(usersList).toEqual(['Mike', 'Julie']);
   });
 
   it('should return names for react course', () => {
-    const usersList = users.getUserLlist('React Course');
+    const usersList = users.getUserList('React Course');
     expect(usersList).toEqual(['Jen']);
   });
 

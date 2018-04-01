@@ -21,7 +21,7 @@ class Users {
     return this.items.filter(item => item.id === id)[0];
   }
 
-  getUserLlist(room) {
+  getUserList(room) {
     return this.items
       .filter(user => user.room === room)
       .map(user => user.name);
